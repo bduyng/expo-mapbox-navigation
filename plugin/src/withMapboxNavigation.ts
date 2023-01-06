@@ -83,11 +83,15 @@ const withCocoaPodsInstallerBlocks: ConfigPlugin = _config => {
 export function applyCocoaPodsModifications(contents: string): string {
   // Ensure installer blocks exist
   let src = contents;
-  src = addInstallerBlock(src, 'pre');
-  src = addInstallerBlock(src, 'post');
-  src = addMapboxInstallerBlock(src, 'pre');
-  src = addMapboxInstallerBlock(src, 'post');
-  return src;
+
+  return mergeContents({
+    tag: `expo-mapbox-navigation-disable_input_output_paths`,
+    src,
+    newSrc: `,:disable_input_output_paths => true`,
+    anchor: new RegExp(`^\\s*:deterministic_uuids => false,`),
+    offset: 1,
+    comment: '#',
+  }).contents;
 }
 
 const withMapboxNavigation: ConfigPlugin<
