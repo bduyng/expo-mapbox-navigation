@@ -46,6 +46,12 @@
         </dict>
       </dict>
     </dict>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips.</string>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

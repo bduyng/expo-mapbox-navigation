@@ -7,7 +7,10 @@ podfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties
 
 platform :ios, podfile_properties['ios.deploymentTarget'] || '13.0'
 install! 'cocoapods',
-  :deterministic_uuids => false
+  :deterministic_uuids => false,
+# @generated begin expo-mapbox-navigation-disable_input_output_paths - expo prebuild (DO NOT MODIFY) sync-824a35c374d2ba1e705b16afe972407901f92a67
+  :disable_input_output_paths => true
+# @generated end expo-mapbox-navigation-disable_input_output_paths
 
 target 'expomapboxnavigationexample' do
   use_expo_modules!

@@ -13,7 +13,8 @@
     "prepublishOnly": "expo-module prepublishOnly",
     "expo-module": "expo-module",
     "open:ios": "open -a \"/Applications/Xcode-14.0.1.app\" example/ios",
-    "open:android": "open -a \"Android Studio\" example/android"
+    "open:android": "open -a \"Android Studio\" example/android",
+    "test-plugin": "bash ./test-plugin.sh"
   },
   "keywords": [
     "react-native",

@@ -14,9 +14,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "expo.modules.mapboxnavigation.example"
@@ -30,6 +28,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-mapbox-navigation",
+        {
+          "whenInUseUsageDescription": "Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips.",
+          "alwaysAndWhenInUseUsageDescription": "Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips.",
+          "alwaysUsageDescription": "Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips."
+        }
+      ]
+    ]
   }
 }

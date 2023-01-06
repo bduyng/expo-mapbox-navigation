@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "expo-mapbox-navigation",
+    "slug": "expo-mapbox-navigation",
+    "version": "0.1.0",
+    "description": "My new module",
+    "sdkVersion": "47.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  }
+}

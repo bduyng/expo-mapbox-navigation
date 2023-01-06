@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "expo": "~47.0.9",
+    "expo-mapbox-navigation": "file:../expo-mapbox-navigation-0.1.0.tgz",
+    "expo-splash-screen": "~0.17.5",
+    "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",

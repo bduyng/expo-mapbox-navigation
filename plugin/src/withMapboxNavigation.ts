@@ -84,11 +84,13 @@ export function applyCocoaPodsModifications(contents: string): string {
   // Ensure installer blocks exist
   let src = contents;
 
+  // FIXME: a better way here?
+  src = src.replace(':deterministic_uuids => false', ':deterministic_uuids => false,');
   return mergeContents({
     tag: `expo-mapbox-navigation-disable_input_output_paths`,
     src,
-    newSrc: `,:disable_input_output_paths => true`,
-    anchor: new RegExp(`^\\s*:deterministic_uuids => false,`),
+    newSrc: `  :disable_input_output_paths => true`,
+    anchor: ':deterministic_uuids => false,',
     offset: 1,
     comment: '#',
   }).contents;
