@@ -33,6 +33,8 @@
     <string>1</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
+    <key>MBXAccessToken</key>
+    <string>pk.eyJ1IjoidG9ybGFuY28iLCJhIjoiY2p4MXBtMng3MGNhdjQ5bXk0eGxkYjZleCJ9.DGPm1KorlfzMJ-Bz95tI1A</string>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
@@ -52,6 +54,13 @@
     <string>Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips.</string>
+    <key>UIBackgroundModes</key>
+    <array>
+      <string>location</string>
+      <string>audio</string>
+      <string>location</string>
+      <string>audio</string>
+    </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

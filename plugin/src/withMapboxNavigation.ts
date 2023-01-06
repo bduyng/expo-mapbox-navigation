@@ -85,12 +85,14 @@ export function applyCocoaPodsModifications(contents: string): string {
   let src = contents;
 
   // FIXME: a better way here?
-  src = src.replace(':deterministic_uuids => false', ':deterministic_uuids => false,');
+  let anchor = ':deterministic_uuids => false';
+  src = src.replace(anchor, `${anchor},`).replace(`${anchor},,`, `${anchor},`);
+  anchor = `${anchor},`;
   return mergeContents({
     tag: `expo-mapbox-navigation-disable_input_output_paths`,
     src,
     newSrc: `  :disable_input_output_paths => true`,
-    anchor: ':deterministic_uuids => false,',
+    anchor,
     offset: 1,
     comment: '#',
   }).contents;
@@ -101,10 +103,16 @@ const withMapboxNavigation: ConfigPlugin<
     whenInUseUsageDescription?: string;
     alwaysAndWhenInUseUsageDescription?: string;
     alwaysUsageDescription?: string;
+    MBXAccessToken?: string;
   } | void
 > = (
   config,
-  { whenInUseUsageDescription, alwaysAndWhenInUseUsageDescription, alwaysUsageDescription } = {}
+  {
+    whenInUseUsageDescription,
+    alwaysAndWhenInUseUsageDescription,
+    alwaysUsageDescription,
+    MBXAccessToken,
+  } = {}
 ) => {
   config = withInfoPlist(config, config => {
     config.modResults.NSLocationWhenInUseUsageDescription =
@@ -119,6 +127,10 @@ const withMapboxNavigation: ConfigPlugin<
       alwaysUsageDescription ||
       config.modResults.NSLocationAlwaysUsageDescription ||
       LOCATION_ALWAYS_USAGE;
+    config.modResults.UIBackgroundModes = config.modResults.UIBackgroundModes
+      ? config.modResults.UIBackgroundModes.concat(['location', 'audio'])
+      : ['location', 'audio'];
+    config.modResults.MBXAccessToken = MBXAccessToken;
 
     return config;
   });

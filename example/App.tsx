@@ -1,20 +1,29 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import * as ExpoMapboxNavigation from 'expo-mapbox-navigation';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>{ExpoMapboxNavigation.hello()}</Text>
+    <View style={{ flex: 1 }}>
+      <ExpoMapboxNavigation.ExpoMapboxNavigationView
+        style={{ flex: 1 }}
+        // onRouteProgressChange={event => {
+        //   const { distanceTraveled, durationRemaining, fractionTraveled, distanceRemaining } =
+        //     event.nativeEvent;
+        // }}
+        // onError={event => {
+        //   const { message } = event.nativeEvent;
+        // }}
+        // onCancelNavigation={() => {
+        //   // User tapped the "X" cancel button in the nav UI
+        //   // or canceled via the OS system tray on android.
+        //   // Do whatever you need to here.
+        //   console.log('aaaaaa');
+        // }}
+        // onArrive={() => {
+        //   // Called when you arrive at the destination.
+        // }}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

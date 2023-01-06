@@ -33,6 +33,7 @@
       [
         "expo-mapbox-navigation",
         {
+          "MBXAccessToken": "<MAPBOX_ACCESS_TOKEN>",
           "whenInUseUsageDescription": "Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips.",
           "alwaysAndWhenInUseUsageDescription": "Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips.",
           "alwaysUsageDescription": "Allow Uva! to use your location, we use your location to make it easier for you to plan and manage trips."
