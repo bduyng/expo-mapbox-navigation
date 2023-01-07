@@ -14,12 +14,12 @@ export default function App() {
         // onError={event => {
         //   const { message } = event.nativeEvent;
         // }}
-        // onCancelNavigation={() => {
-        //   // User tapped the "X" cancel button in the nav UI
-        //   // or canceled via the OS system tray on android.
-        //   // Do whatever you need to here.
-        //   console.log('aaaaaa');
-        // }}
+        onCancelNavigation={() => {
+          // User tapped the "X" cancel button in the nav UI
+          // or canceled via the OS system tray on android.
+          // Do whatever you need to here.
+          console.log('onCancelNavigation');
+        }}
         // onArrive={() => {
         //   // Called when you arrive at the destination.
         // }}

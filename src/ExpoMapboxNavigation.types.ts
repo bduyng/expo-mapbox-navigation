@@ -5,4 +5,9 @@ export type ChangeEventPayload = {
 
 export type ExpoMapboxNavigationViewProps = {
   name?: string;
+  onArrive?(): void;
+  onError?(): void;
+  onCancelNavigation?(): void;
+  onLocationChange?(): void;
+  onRouteProgressChange?(): void;
 } & ViewProps;

@@ -8,8 +8,26 @@ import MapboxDirections
 
 // This view will be used as a native component. Make sure to inherit from `ExpoView`
 // to apply the proper styling (e.g. border radius and shadows).
-class ExpoMapboxNavigationView: ExpoView, NavigationViewControllerDelegate {
+
+
+extension ExpoView {
+  var parentViewController: UIViewController? {
+    var parentResponder: UIResponder? = self
+    while parentResponder != nil {
+      parentResponder = parentResponder!.next
+      if let viewController = parentResponder as? UIViewController {
+        return viewController
+      }
+    }
+    return nil
+  }
+}
+
+class ExpoMapboxNavigationView: ExpoView {
   weak var navViewController: NavigationViewController?
+  var embedded: Bool
+  var embedding: Bool
+  
   let onArrive = EventDispatcher()
   let onError = EventDispatcher()
   let onCancelNavigation = EventDispatcher()
@@ -17,56 +35,81 @@ class ExpoMapboxNavigationView: ExpoView, NavigationViewControllerDelegate {
   let onRouteProgressChange = EventDispatcher()
   
   required init(appContext: AppContext? = nil) {
+    self.embedded = false
+    self.embedding = false
     super.init(appContext: appContext)
     clipsToBounds = true
+  }
+  
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    
+    if (navViewController == nil && !embedding && !embedded) {
+      embed()
+    } else {
+      navViewController?.view.frame = bounds
+    }
+  }
+  
+  override func removeFromSuperview() {
+    super.removeFromSuperview()
+    // cleanup and teardown any existing resources
+    self.navViewController?.removeFromParent()
+  }
+  
+  
+  private func embed() {
+    embedding = true
+    
     
     // Define two waypoints to travel between
     let origin = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.9131752, longitude: -77.0324047), name: "Mapbox")
-    let destination = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.8977, longitude: -77.0365), name: "White House")
+    let destination = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.9130752, longitude: -77.0320047), name: "White House")
     
     // Set options
     let routeOptions = NavigationRouteOptions(waypoints: [origin, destination])
     
     Directions.shared.calculate(routeOptions) { [weak self] (_, result) in
-      guard let strongSelf = self else {
+      guard let strongSelf = self, let parentVC = strongSelf.parentViewController else {
         return
       }
       switch result {
       case .failure(let error):
+        strongSelf.onError(["message": error.localizedDescription])
         print(error.localizedDescription)
       case .success(let response):
-        guard let weakSelf = self else {
-          return
-        }
-        let navigationService = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: routeOptions, simulating: .always)
         
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: response, routeIndex: 0)
+        let navigationService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
+                                                        customRoutingProvider: NavigationSettings.shared.directions,
+                                                        credentials: NavigationSettings.shared.directions.credentials,
+                                                        simulating: .always)
         let navigationOptions = NavigationOptions(navigationService: navigationService)
-        let vc = NavigationViewController(for: response, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navigationOptions)
+        let navigationViewController = NavigationViewController(for: indexedRouteResponse,
+                                                                navigationOptions: navigationOptions)
         
-        // vc.showsEndOfRouteFeedback = strongSelf.showsEndOfRouteFeedback
-        // StatusView.appearance().isHidden = strongSelf.hideStatusView
+        navigationViewController.showsEndOfRouteFeedback = false
+        NavigationSettings.shared.voiceMuted = false
+        navigationViewController.delegate = strongSelf
         
-        // NavigationSettings.shared.voiceMuted = strongSelf.mute;
-        
-        vc.delegate = strongSelf
-        
-        //          parentVC.addChild(vc)
-        if (vc.view != nil) {
-          strongSelf.addSubview((vc.view)!)
+        parentVC.addChild(navigationViewController)
+        if (navigationViewController.view != nil) {
+          strongSelf.addSubview((navigationViewController.view)!)
         }
-        strongSelf.addSubview(vc.view)
-        vc.view.frame = strongSelf.bounds
-        //          vc.didMove(toParent: parentVC)
-        strongSelf.navViewController = vc
-        print(response)
+        navigationViewController.view.frame = strongSelf.bounds
+        navigationViewController.didMove(toParent: parentVC)
+        strongSelf.navViewController = navigationViewController
       }
+      
+      strongSelf.embedding = false
+      strongSelf.embedded = true
     }
   }
   
-  override func layoutSubviews() {
-    navViewController?.view.frame = bounds
-  }
   
+}
+
+extension ExpoMapboxNavigationView: NavigationViewControllerDelegate {
   func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
     onLocationChange(["longitude": location.coordinate.longitude, "latitude": location.coordinate.latitude])
     onRouteProgressChange(["distanceTraveled": progress.distanceTraveled,
@@ -75,15 +118,15 @@ class ExpoMapboxNavigationView: ExpoView, NavigationViewControllerDelegate {
                            "distanceRemaining": progress.distanceRemaining])
   }
   
+  func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
+    onArrive();
+    return true;
+  }
+  
   func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
     if (!canceled) {
       return;
     }
     onCancelNavigation();
-  }
-  
-  func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
-    onArrive();
-    return true;
   }
 }
